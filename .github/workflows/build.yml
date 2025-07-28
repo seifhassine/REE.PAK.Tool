@@ -2,8 +2,7 @@ name: Release REE.Packer
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches: [ main ]
 
 jobs:
   build-and-release:
