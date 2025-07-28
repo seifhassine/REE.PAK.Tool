@@ -27,7 +27,7 @@ jobs:
 
     - name: Copy libzstd.dll to build output
       run: |
-        copy Libs\libzstd.dll REE.Packer/REE.Packer/bin/Release/
+        copy REE.Packer\REE.Packer\Libs\libzstd.dll REE.Packer/REE.Packer/bin/Release/
 
     - name: Zip build output
       run: |
