@@ -12,7 +12,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
@@ -29,7 +28,13 @@ jobs:
       run: |
         powershell Compress-Archive -Path REE.Packer/REE.Packer/bin/Release/* -DestinationPath REE.Packer.zip
 
+    - name: Set version
+      id: set_version
+      run: echo "version=0.0.0.${{ github.run_number }}" >> $GITHUB_ENV
+
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v2
       with:
+        tag_name: ${{ env.version }}
+        name: REE.Packer ${{ env.version }}
         files: REE.Packer.zip
