@@ -1,0 +1,31 @@
+name: Build REE.Packer
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v2
+
+    - name: Restore NuGet packages
+      run: nuget restore REE.Packer/REE.Packer.sln
+
+    - name: Build solution
+      run: msbuild REE.Packer/REE.Packer.sln /p:Configuration=Release
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: REE.Packer-Build
+        path: |
+          REE.Packer/REE.Packer/bin/Release/
