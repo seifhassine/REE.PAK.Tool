@@ -1,18 +1,21 @@
-name: Build REE.Packer
+name: Release REE.Packer
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    tags:
+      - 'v*'
 
 jobs:
-  build:
+  build-and-release:
     runs-on: windows-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
 
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v2
@@ -23,9 +26,11 @@ jobs:
     - name: Build solution
       run: msbuild REE.Packer/REE.Packer.sln /p:Configuration=Release
 
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
+    - name: Zip build output
+      run: |
+        powershell Compress-Archive -Path REE.Packer/REE.Packer/bin/Release/* -DestinationPath REE.Packer.zip
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v2
       with:
-        name: REE.Packer-Build
-        path: |
-          REE.Packer/REE.Packer/bin/Release/
+        files: REE.Packer.zip
