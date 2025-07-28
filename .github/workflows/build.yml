@@ -25,6 +25,10 @@ jobs:
     - name: Build solution
       run: msbuild REE.Packer/REE.Packer.sln /p:Configuration=Release
 
+    - name: Copy libzstd.dll to build output
+      run: |
+        copy libzstd.dll REE.Packer/REE.Packer/bin/Release/
+
     - name: Zip build output
       run: |
         powershell Compress-Archive -Path REE.Packer/REE.Packer/bin/Release/* -DestinationPath REE.Packer.zip
